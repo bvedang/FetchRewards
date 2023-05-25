@@ -1,9 +1,13 @@
 package com.example.fetchrewardexercise;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -24,9 +28,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class MainActivity extends AppCompatActivity {
-
     private RecyclerView recyclerView;
-    private List<Items> itemList = new ArrayList<>();
+    private final List<Items> itemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,15 @@ public class MainActivity extends AppCompatActivity {
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED){
+            fetchData();
+        } else {
+            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void fetchData(){
 
         // Initialize Retrofit
         Retrofit retrofit = new Retrofit.Builder()
@@ -48,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // Fetch the data
         call.enqueue(new Callback<List<Items>>() {
             @Override
-            public void onResponse(Call<List<Items>> call, Response<List<Items>> response) {
+            public void onResponse(@NonNull Call<List<Items>> call, Response<List<Items>> response) {
                 if (response.isSuccessful()) {
                     List<Items> items = response.body();
 
@@ -73,6 +85,5 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
     }
 }

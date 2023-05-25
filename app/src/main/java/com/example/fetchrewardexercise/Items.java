@@ -2,6 +2,11 @@ package com.example.fetchrewardexercise;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Represents an item fetched from the server.
+ * Implements Comparable to allow items to be sorted by "listId" and then by "name".
+ */
+
 public class Items implements Comparable<Items>{
     @SerializedName("id")
     private int id;
@@ -37,6 +42,12 @@ public class Items implements Comparable<Items>{
     public void setName(String name) {
         this.name = name;
     }
+
+    /**
+     * Compares this item with the specified item for order.
+     * Returns a negative integer, zero, or a positive integer as this item
+     * is less than, equal to, or greater than the specified item.
+     */
 
     @Override
     public int compareTo(Items item) {

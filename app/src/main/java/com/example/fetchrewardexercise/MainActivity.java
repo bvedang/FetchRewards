@@ -17,25 +17,35 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * The main activity of the application.
+ * Fetches the items, filters out items where "name" is blank or null,
+ * sorts the items, and updates the RecyclerView with the sorted items.
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private List<Items> itemList = new ArrayList<Items>();
+    private List<Items> itemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Initialize Retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://fetch-hiring.s3.amazonaws.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        // Initialize ApiService
         ApiService apiService = retrofit.create(ApiService.class);
         Call<List<Items>> call = apiService.getItems();
+        // Fetch the data
         call.enqueue(new Callback<List<Items>>() {
             @Override
             public void onResponse(Call<List<Items>> call, Response<List<Items>> response) {
